@@ -615,7 +615,7 @@ def initialize_vlm_parameters(config, seed=0):
     num_patches = config.get('num_patches',grid_size * grid_size)
 
     vision['patch_size'] = patch_size
-    vision['patch_proj_weight'] = init_w(d_vision, channels*patch_size*patch_size)
+    vision['patch_proj_weight'] = init_w(channels*patch_size*patch_size, d_vision)
     vision['patch_proj_bias'] = torch.zeros((d_vision,), requires_grad=True)
     vision['class_token'] = torch.empty(1, 1, d_vision).normal_(mean=0.0, std=0.02)
     vision['class_token'].requires_grad_(True)
@@ -744,4 +744,24 @@ def zero_gradients(parameter_list):
     for p in parameter_list:
         if p.grad is not None:
             p.grad.zero_()
+
+# Step 60 - training_step
+def training_step(image, token_ids, labels, params, parameter_list, learning_rate):
+    """Run one optimization step: zero grads, forward, loss, backward, SGD update. Return the scalar loss."""
+    # TODO: zero grads, compute loss via the upstream helpers, backprop, then update each parameter in place
+    zero_gradients(parameter_list)
+
+    logits = vision_language_forward(image, token_ids, params)
+    shifted_logits, shifted_labels = shift_logits_and_labels(logits, labels)
+    per_position_loss = per_position_cross_entropy(shifted_logits, shifted_labels)
+
+    loss = masked_mean_loss(per_position_loss, shifted_labels)
+
+    loss.backward()
+    with torch.no_grad():
+        for p in parameter_list:
+            if p.grad is not None:
+                p -= learning_rate * p.grad
+
+    return loss.item()
 
