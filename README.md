@@ -59,6 +59,7 @@ python scaffold.py
 - [x] **47.** encode_image_to_tokens
 - [x] **48.** vision_language_forward
 - [x] **49.** shift_logits_and_labels
+- [x] **50.** per_position_cross_entropy
 
 ---
 

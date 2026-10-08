@@ -505,3 +505,19 @@ def shift_logits_and_labels(logits, labels):
     # TODO: align each logit with the next-position label and return (shifted_logits, shifted_labels).
     return logits[:-1], labels[1:]
 
+# Step 50 - per_position_cross_entropy
+import torch
+
+def per_position_cross_entropy(shifted_logits, shifted_labels, ignore_index=-100):
+    """Per-position next-token cross-entropy with 0 at ignored positions."""
+    # TODO: log-softmax over vocab, gather target log-probs, zero out ignored positions
+    shifted = shifted_logits - shifted_logits.max(dim=-1, keepdim=True).values
+    logsumexp = torch.log(torch.exp(shifted).sum(dim=-1, keepdim=True))
+    logprobs = shifted - logsumexp
+
+    mask = shifted_labels == ignore_index
+    shifted_labels[mask] = 0
+    entropy = -logprobs[torch.arange(shifted_labels.shape[0]), shifted_labels]
+    entropy[mask] = 0.0
+    return entropy
+
