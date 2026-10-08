@@ -765,3 +765,12 @@ def training_step(image, token_ids, labels, params, parameter_list, learning_rat
 
     return loss.detach()
 
+# Step 61 - apply_gradient_update
+def apply_gradient_update(parameters, learning_rate):
+    # TODO: apply p.data -= learning_rate * p.grad in-place for each parameter with a populated grad.
+    for p in parameters:
+        if p is not None and p.grad is not None:
+            p.data -= learning_rate * p.grad
+
+    return parameters
+
