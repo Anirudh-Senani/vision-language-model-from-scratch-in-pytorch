@@ -578,3 +578,19 @@ def sample_from_logits(logits):
     probs = torch.softmax(logits, dim=-1)
     return torch.multinomial(probs, num_samples=1).item()
 
+# Step 56 - generate_caption
+def generate_caption(image, prompt_ids, params, max_new_tokens, temperature=1.0, top_k=0, do_sample=False):
+    # TODO: autoregressively generate token ids by repeatedly calling vision_language_forward.
+    for _ in range(max_new_tokens):
+        logits = vision_language_forward(image, prompt_ids, params)
+        if do_sample:
+            logits = top_k_filter(logits[-1], top_k)
+            logits = apply_temperature(logits, temperature)
+            token_id = sample_from_logits(logits)
+        else:
+            token_id = greedy_next_token(logits)
+
+        prompt_ids = torch.cat([prompt_ids, torch.tensor([token_id])])
+
+    return prompt_ids.tolist()
+
