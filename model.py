@@ -57,3 +57,11 @@ def prepend_class_token(patch_embeddings, class_token):
     B, N, D = patch_embeddings.shape
     return torch.cat([class_token.expand((B, 1, D)), patch_embeddings], dim=1)
 
+# Step 6 - add_position_embeddings
+import torch
+
+def add_position_embeddings(tokens, position_embeddings):
+    """Add learnable position embeddings to a (B, S, D) token sequence."""
+    # TODO: combine tokens (B, S, D) with position_embeddings (1, S, D) via broadcasting.
+    return tokens + position_embeddings
+

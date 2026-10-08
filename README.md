@@ -15,6 +15,7 @@ python scaffold.py
 - [x] **3.** linear_projection
 - [x] **4.** project_patches_to_embeddings
 - [x] **5.** prepend_class_token
+- [x] **6.** add_position_embeddings
 
 ---
 
