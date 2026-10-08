@@ -132,9 +132,13 @@ import torch
 def split_into_heads(x, num_heads):
     """Reshape (B, S, d_model) into (B, num_heads, S, d_head)."""
     # TODO: split the last dim into (num_heads, d_head) and move heads next to batch
-    B, S, d_model = x.shape
+    B, S, d_model = x.shape if len(x.shape) == 3 else (1, *x.shape)
     d_head = d_model//num_heads
-    return x.reshape((B, S, num_heads, d_head)).transpose(1, 2)
+    heads = x.reshape((B, S, num_heads, d_head)).transpose(1, 2)
+
+    if len(x.shape) < 3:
+        heads = heads[0]
+    return heads
 
 # Step 14 - merge_heads
 import torch
@@ -415,4 +419,13 @@ def build_causal_mask(seq_len):
     """Return a (seq_len, seq_len) additive causal mask: 0 on/under diag, -inf above."""
     # TODO: build a lower-triangular additive mask with 0 allowed and -inf blocked
     return torch.triu(torch.full((seq_len, seq_len), -torch.inf), diagonal=1)
+
+# Step 43 - decoder_block
+def decoder_block(x, params, causal_mask):
+    # TODO: run a pre-norm masked self-attention sublayer then a pre-norm MLP sublayer over x.
+    mhsa_fn = lambda x: multi_head_self_attention(x, params['attn'], params['num_heads'], causal_mask)
+    mlp_fn = lambda x: mlp_block(x, params['mlp'])
+
+    attn_out = pre_norm_sublayer(x, params['ln1']['gamma'], params['ln1']['beta'], mhsa_fn)
+    return pre_norm_sublayer(attn_out, params['ln2']['gamma'], params['ln2']['beta'], mlp_fn)
 

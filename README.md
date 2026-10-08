@@ -52,6 +52,7 @@ python scaffold.py
 - [x] **40.** build_multimodal_embeddings
 - [x] **41.** build_label_tensor
 - [x] **42.** build_causal_mask
+- [x] **43.** decoder_block
 
 ---
 
