@@ -763,5 +763,5 @@ def training_step(image, token_ids, labels, params, parameter_list, learning_rat
             if p.grad is not None:
                 p -= learning_rate * p.grad
 
-    return loss.item()
+    return loss.detach()
 
