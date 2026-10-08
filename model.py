@@ -485,3 +485,16 @@ def encode_image_to_tokens(image, vision_params, projector_params):
         out = out.squeeze(0)
     return out
 
+# Step 48 - vision_language_forward
+def vision_language_forward(image, token_ids, params):
+    # TODO: route image + token_ids through the full vision-language model and return (L, V) logits.
+    image_tokens = encode_image_to_tokens(image, params['vision'], params['projector'])
+    mm_embed = build_multimodal_embeddings(token_ids, image_tokens, params['embedding'], params['pos_embedding'], params['image_token_id'])
+
+    causal_mask = build_causal_mask(mm_embed.shape[0])
+    decoded = language_model_decoder(mm_embed, params['decoder_blocks'], causal_mask)
+    norm = final_layer_norm(decoded, params['final_ln']['gamma'], params['final_ln']['beta'])
+
+    logits = language_model_head(norm, params['lm_head']['w_out'], params['lm_head']['b_out'])
+    return logits
+
