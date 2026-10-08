@@ -88,3 +88,10 @@ def scale_attention_scores(scores, d_head):
     scale = 1.0/(d_head**0.5)
     return scores * scale
 
+# Step 9 - apply_attention_mask
+def apply_attention_mask(scores, mask):
+    # TODO: add an additive mask (0 = allowed, -inf = blocked) to attention scores.
+    if mask is not None:
+        scores += mask
+    return scores
+
