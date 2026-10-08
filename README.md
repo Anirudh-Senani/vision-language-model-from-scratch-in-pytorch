@@ -46,6 +46,7 @@ python scaffold.py
 - [x] **34.** build_token_vocabulary
 - [x] **35.** encode_text_to_ids
 - [x] **36.** embed_token_ids
+- [x] **37.** add_text_position_embeddings
 
 ---
 
