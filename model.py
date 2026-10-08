@@ -150,3 +150,10 @@ def project_qkv(x, wq, bq, wk, bk, wv, bv):
     # TODO: project x into separate query, key, and value tensors using three linear layers.
     return linear_projection(x, wq, bq), linear_projection(x, wk, bk), linear_projection(x, wv, bv)
 
+# Step 16 - split_qkv_into_heads
+import torch
+
+def split_qkv_into_heads(q, k, v, num_heads):
+    # TODO: reshape q, k, v from (B, S, d_model) into (B, num_heads, S, d_head) each
+    return split_into_heads(q, num_heads), split_into_heads(k, num_heads), split_into_heads(v, num_heads)
+

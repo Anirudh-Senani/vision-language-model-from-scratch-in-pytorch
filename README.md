@@ -25,6 +25,7 @@ python scaffold.py
 - [x] **13.** split_into_heads
 - [x] **14.** merge_heads
 - [x] **15.** project_qkv
+- [x] **16.** split_qkv_into_heads
 
 ---
 
