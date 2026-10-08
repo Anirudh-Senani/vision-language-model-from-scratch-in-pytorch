@@ -26,6 +26,7 @@ python scaffold.py
 - [x] **14.** merge_heads
 - [x] **15.** project_qkv
 - [x] **16.** split_qkv_into_heads
+- [x] **17.** multi_head_attention_scores
 
 ---
 
