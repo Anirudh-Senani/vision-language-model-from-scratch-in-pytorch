@@ -284,3 +284,10 @@ def extract_patch_features(encoder_output):
     # TODO: drop the class token and return only patch feature tokens
     return encoder_output[:, 1:, :]
 
+# Step 31 - projector_first_layer
+import torch
+
+def projector_first_layer(patch_features, w1, b1):
+    # TODO: apply the first projector linear layer followed by GELU
+    return gelu_activation(patch_features @ w1 + b1)
+

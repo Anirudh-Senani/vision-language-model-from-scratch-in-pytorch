@@ -40,6 +40,7 @@ python scaffold.py
 - [x] **28.** vision_encoder_block
 - [x] **29.** vision_encoder
 - [x] **30.** extract_patch_features
+- [x] **31.** projector_first_layer
 
 ---
 
