@@ -661,9 +661,9 @@ def initialize_vlm_parameters(config, seed=0):
     projector = {}
     d_text = config.get('d_text', None) or config.get('d_lang', 16)
 
-    projector['w1'] = init_w(d_text*2, d_vision)
-    projector['b1'] = torch.zeros((d_text*2,), requires_grad=True)
-    projector['w1'] = init_w(d_text, d_text*2)
+    projector['w1'] = init_w(d_text*4, d_vision)
+    projector['b1'] = torch.zeros((d_text*4,), requires_grad=True)
+    projector['w1'] = init_w(d_text, d_text*4)
     projector['b1'] = torch.zeros((d_text,), requires_grad=True)
     params['projector'] = projector
 
@@ -730,7 +730,7 @@ def collect_parameters(params):
     elif isinstance(params, (list, tuple)):
         for param in params:
             parameters += collect_parameters(param)
-    elif isinstance(params, torch.tensor):
+    elif isinstance(params, torch.Tensor):
         if params.requires_grad:
             parameters += [params]
     return parameters
