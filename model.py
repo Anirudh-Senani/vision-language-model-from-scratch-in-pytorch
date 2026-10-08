@@ -455,3 +455,8 @@ def final_layer_norm(x, gamma, beta):
     # TODO: apply the existing layer_norm primitive to x using gamma and beta.
     return layer_norm(x, gamma, beta)
 
+# Step 46 - language_model_head
+def language_model_head(x, w_out, b_out):
+    # TODO: project hidden states (L, D) to vocabulary logits (L, V) using w_out and b_out
+    return x @ w_out + b_out
+

@@ -55,6 +55,7 @@ python scaffold.py
 - [x] **43.** decoder_block
 - [x] **44.** language_model_decoder
 - [x] **45.** final_layer_norm
+- [x] **46.** language_model_head
 
 ---
 
