@@ -22,6 +22,7 @@ python scaffold.py
 - [x] **10.** attention_softmax
 - [x] **11.** attention_context
 - [x] **12.** scaled_dot_product_attention
+- [x] **13.** split_into_heads
 
 ---
 
