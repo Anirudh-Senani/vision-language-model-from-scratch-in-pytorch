@@ -39,6 +39,7 @@ python scaffold.py
 - [x] **27.** pre_norm_sublayer
 - [x] **28.** vision_encoder_block
 - [x] **29.** vision_encoder
+- [x] **30.** extract_patch_features
 
 ---
 
