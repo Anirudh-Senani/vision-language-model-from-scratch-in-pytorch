@@ -550,3 +550,16 @@ def apply_temperature(logits, temperature):
 
     return logits/temperature
 
+# Step 54 - top_k_filter
+import torch
+
+def top_k_filter(logits, k):
+    """Keep only the top-k logits; set all others to -inf."""
+    # TODO: keep top-k logits, replace the rest with -inf
+    if k == 0:
+        k = logits.shape[0]
+    non_top_k = torch.argsort(-logits)[k:]
+    top_k_logits = logits.clone()
+    top_k_logits[non_top_k] = -torch.inf
+    return top_k_logits
+

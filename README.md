@@ -63,6 +63,7 @@ python scaffold.py
 - [x] **51.** masked_mean_loss
 - [x] **52.** greedy_next_token
 - [x] **53.** apply_temperature
+- [x] **54.** top_k_filter
 
 ---
 
