@@ -308,3 +308,17 @@ def vision_language_projector(patch_features, params):
     a1 = projector_first_layer(patch_features, params['w1'], params['b1'])
     return projector_second_layer(a1, params['w2'], params['b2'])
 
+# Step 34 - build_token_vocabulary
+def build_token_vocabulary(texts, image_token='<image>', pad_token='<pad>'):
+    # TODO: Build a whitespace token-to-id vocabulary with pad at 0 and image token at 1.
+    vocab = {pad_token:0, image_token:1}
+    vocab_set = set()
+
+    for text in texts:
+        for tok in text.strip().split():
+            if tok not in vocab_set and tok not in (pad_token, image_token):
+                vocab_set.add(tok)
+
+    vocab.update({tok: i+2 for i, tok in enumerate(sorted(vocab_set))})
+    return vocab
+
