@@ -35,6 +35,7 @@ python scaffold.py
 - [x] **23.** mlp_block
 - [x] **24.** compute_layernorm_stats
 - [x] **25.** layer_norm
+- [x] **26.** residual_add
 
 ---
 
