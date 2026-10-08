@@ -146,8 +146,17 @@ import torch
 def merge_heads(x):
     """Merge (B, num_heads, S, d_head) back to (B, S, num_heads*d_head)."""
     # TODO: merge the multi-head dimension back into the model dimension
+    flag = False
+    if len(x.shape) < 4:
+        x = x[None, ...]
+        flag = True
+
     B, H, S, D = x.shape
-    return x.transpose(1,2).reshape((B, S, H*D))
+    merged = x.transpose(1,2).reshape((B, S, H*D))
+    if flag:
+        merged = merged[0]
+
+    return merged
 
 # Step 15 - project_qkv
 def project_qkv(x, wq, bq, wk, bk, wv, bv):
