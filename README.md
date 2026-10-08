@@ -68,6 +68,7 @@ python scaffold.py
 - [x] **56.** generate_caption
 - [x] **57.** initialize_vlm_parameters
 - [x] **58.** collect_parameters
+- [x] **59.** zero_gradients
 
 ---
 

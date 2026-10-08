@@ -738,3 +738,10 @@ def collect_parameters(params):
             parameters += [params]
     return parameters
 
+# Step 59 - zero_gradients
+def zero_gradients(parameter_list):
+    # TODO: reset the .grad attribute of every parameter tensor to zero in place
+    for p in parameter_list:
+        if p.grad is not None:
+            p.grad.zero_()
+
