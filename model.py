@@ -402,8 +402,9 @@ def build_label_tensor(token_ids, image_token_id, pad_token_id, num_image_tokens
 
     token_ids = torch.where(token_ids==pad_token_id, torch.tensor(ignore_index), token_ids)
 
-    for pp in placeholder_ids:
-        token_ids = insert_image_tokens(token_ids, image_tokens, pp)
+    while placeholder_ids:
+        token_ids = insert_image_tokens(token_ids, image_tokens, placeholder_ids[0])
+        placeholder_ids = find_image_placeholder_positions(token_ids, image_token_id)
 
     return token_ids
 
