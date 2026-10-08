@@ -705,6 +705,9 @@ def initialize_vlm_parameters(config, seed=0):
 
         decoder_blocks.append(block)
 
+    decoder_blocks[-1]['a1'] = torch.zeros((2,), requires_grad=True)
+    decoder_blocks[-1]['a2'] = torch.zeros((2,), requires_grad=True)
+
     params['decoder_blocks'] = decoder_blocks
     params['final_ln'] = {}
     params['final_ln']['gamma'] = torch.ones((d_text,), requires_grad=True)
