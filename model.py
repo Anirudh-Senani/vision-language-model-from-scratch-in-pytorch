@@ -291,3 +291,11 @@ def projector_first_layer(patch_features, w1, b1):
     # TODO: apply the first projector linear layer followed by GELU
     return gelu_activation(patch_features @ w1 + b1)
 
+# Step 32 - projector_second_layer
+import torch
+
+def projector_second_layer(hidden, w2, b2):
+    """Map hidden activations (N, D_hidden) into the language space (N, D_lang)."""
+    # TODO: apply the second linear layer of the projector (no activation).
+    return hidden @ w2 + b2
+
