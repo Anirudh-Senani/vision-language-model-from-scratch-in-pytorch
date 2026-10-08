@@ -530,9 +530,7 @@ def masked_mean_loss(per_position_losses, shifted_labels, ignore_index=-100):
     """Average per-position losses over positions whose label != ignore_index."""
     # TODO: average per_position_losses over positions where shifted_labels != ignore_index
     mask = shifted_labels != ignore_index
-    print(shifted_labels)
     if mask.sum() == 0:
         return torch.tensor(0.0)
-    print(per_position_losses[mask])
     return per_position_losses[mask].mean()
 
