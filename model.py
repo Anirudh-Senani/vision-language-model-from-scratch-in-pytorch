@@ -222,3 +222,10 @@ def mlp_block(x, params):
     # TODO: Assemble the position-wise two-layer MLP block with GELU between layers.
     return mlp_second_layer(mlp_first_layer(x, params['w1'], params['b1']), params['w2'], params['b2'])
 
+# Step 24 - compute_layernorm_stats
+import torch
+
+def compute_layernorm_stats(x, eps=1e-5):
+    # TODO: return (mean, var) along the last dim, each with shape (..., 1).
+    return x.mean(dim=-1, keepdim=True), x.var(dim=-1, keepdim=True, correction=0)
+

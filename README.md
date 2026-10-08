@@ -33,6 +33,7 @@ python scaffold.py
 - [x] **21.** mlp_first_layer
 - [x] **22.** mlp_second_layer
 - [x] **23.** mlp_block
+- [x] **24.** compute_layernorm_stats
 
 ---
 
