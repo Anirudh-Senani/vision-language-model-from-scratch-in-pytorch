@@ -49,6 +49,7 @@ python scaffold.py
 - [x] **37.** add_text_position_embeddings
 - [x] **38.** find_image_placeholder_positions
 - [x] **39.** insert_image_tokens
+- [x] **40.** build_multimodal_embeddings
 
 ---
 
