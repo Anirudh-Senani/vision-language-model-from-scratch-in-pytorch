@@ -661,7 +661,7 @@ def initialize_vlm_parameters(config, seed=0):
     projector = {}
     d_text = config.get('d_text', None) or config.get('d_lang', 16)
 
-    projector['w1'] = init_w(d_vision, d_text*2)
+    projector['w1'] = init_w(d_text*2, d_vision)
     projector['b1'] = torch.zeros((d_text*2,), requires_grad=True)
     projector['w2'] = init_w(d_text, d_text*2)
     projector['b2'] = torch.zeros((d_text,), requires_grad=True)
