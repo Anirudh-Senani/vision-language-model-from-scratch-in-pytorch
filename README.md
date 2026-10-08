@@ -17,6 +17,7 @@ python scaffold.py
 - [x] **5.** prepend_class_token
 - [x] **6.** add_position_embeddings
 - [x] **7.** compute_attention_scores
+- [x] **8.** scale_attention_scores
 
 ---
 
