@@ -448,3 +448,10 @@ def language_model_decoder(x, blocks_params, causal_mask):
 
     return x
 
+# Step 45 - final_layer_norm
+import torch
+
+def final_layer_norm(x, gamma, beta):
+    # TODO: apply the existing layer_norm primitive to x using gamma and beta.
+    return layer_norm(x, gamma, beta)
+
