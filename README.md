@@ -47,6 +47,7 @@ python scaffold.py
 - [x] **35.** encode_text_to_ids
 - [x] **36.** embed_token_ids
 - [x] **37.** add_text_position_embeddings
+- [x] **38.** find_image_placeholder_positions
 
 ---
 

@@ -357,3 +357,12 @@ def add_text_position_embeddings(text_embeddings, position_embeddings):
     T = text_embeddings.shape[0]
     return text_embeddings + position_embeddings[:T]
 
+# Step 38 - find_image_placeholder_positions
+import torch
+
+def find_image_placeholder_positions(token_ids, image_token_id):
+    """Return a list of indices where token_ids == image_token_id."""
+    # TODO: scan token_ids and return every position whose value equals image_token_id
+    seq_len = len(token_ids)
+    return torch.arange(seq_len, dtype=torch.int64)[token_ids == image_token_id].tolist()
+
