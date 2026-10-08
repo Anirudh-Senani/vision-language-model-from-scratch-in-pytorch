@@ -534,3 +534,8 @@ def masked_mean_loss(per_position_losses, shifted_labels, ignore_index=-100):
         return torch.tensor(0.0)
     return per_position_losses[mask].mean()
 
+# Step 52 - greedy_next_token
+def greedy_next_token(logits):
+    # TODO: return the int token id with the highest logit at the final position
+    return torch.argmax(logits[-1]).item()
+

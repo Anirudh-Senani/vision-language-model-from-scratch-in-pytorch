@@ -61,6 +61,7 @@ python scaffold.py
 - [x] **49.** shift_logits_and_labels
 - [x] **50.** per_position_cross_entropy
 - [x] **51.** masked_mean_loss
+- [x] **52.** greedy_next_token
 
 ---
 
