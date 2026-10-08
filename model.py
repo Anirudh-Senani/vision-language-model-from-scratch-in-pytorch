@@ -264,3 +264,15 @@ def vision_encoder_block(x, block_params, num_heads):
     attn_out = pre_norm_sublayer(x, block_params['ln1_gamma'], block_params['ln1_beta'], mhsa_fn)
     return pre_norm_sublayer(attn_out, block_params['ln2_gamma'], block_params['ln2_beta'], mlp_fn)
 
+# Step 29 - vision_encoder
+import torch
+
+def vision_encoder(patch_sequence, encoder_params, num_heads):
+    """Stack ViT encoder blocks then apply a final layer norm to the patch sequence."""
+    # TODO: run patch_sequence through every block in encoder_params['blocks'], then final layer norm.
+    x = patch_sequence
+    for block_params in encoder_params['blocks']:
+        x = vision_encoder_block(x, block_params, num_heads)
+    
+    return layer_norm(x, encoder_params['final_ln_gamma'], encoder_params['final_ln_beta'])
+
