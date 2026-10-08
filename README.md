@@ -64,6 +64,7 @@ python scaffold.py
 - [x] **52.** greedy_next_token
 - [x] **53.** apply_temperature
 - [x] **54.** top_k_filter
+- [x] **55.** sample_from_logits
 
 ---
 
