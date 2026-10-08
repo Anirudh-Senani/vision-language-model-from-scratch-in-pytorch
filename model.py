@@ -594,3 +594,126 @@ def generate_caption(image, prompt_ids, params, max_new_tokens, temperature=1.0,
 
     return prompt_ids.tolist()
 
+# Step 57 - initialize_vlm_parameters
+def initialize_vlm_parameters(config, seed=0):
+    # TODO: build the full params dict with leaf tensors requiring grad for every component.
+    torch.manual_seed(seed)
+
+    def init_w(in_feat, out_feat):
+        w = torch.empty(out_feat, in_feat).normal_(mean=0.0, std=0.02)
+        w.requires_grad_(True)
+
+        return w
+
+    params = {}
+    vision = {}
+
+    patch_size = config['patch_size']
+    channels = config.get('in_channels', 3)
+    d_vision = config['d_vision']
+    grid_size = config['image_size']//patch_size
+    num_patches = config.get('num_patches',grid_size * grid_size)
+
+    vision['patch_size'] = patch_size
+    vision['patch_proj_weight'] = init_w(d_vision, channels*patch_size*patch_size)
+    vision['patch_proj_bias'] = torch.zeros((d_vision,), requires_grad=True)
+    vision['class_token'] = torch.empty(1, 1, d_vision).normal_(mean=0.0, std=0.02)
+    vision['class_token'].requires_grad_(True)
+    vision['position_embeddings'] = init_w(d_vision, num_patches+1)
+
+    vision['num_heads'] = config.get('num_vision_heads', 2)
+
+    vision['blocks'] = []
+    for _ in range(config['num_vision_layers']):
+        attn = {}
+        mlp = {}
+
+        attn['wq'] = init_w(d_vision, d_vision)
+        attn['bq'] = torch.zeros((d_vision,), requires_grad=True)
+        attn['wk'] = init_w(d_vision, d_vision)
+        attn['bk'] = torch.zeros((d_vision,), requires_grad=True)
+        attn['wv'] = init_w(d_vision, d_vision)
+        attn['bv'] = torch.zeros((d_vision,), requires_grad=True)
+        attn['wo'] = init_w(d_vision, d_vision)
+        attn['bo'] = torch.zeros((d_vision,), requires_grad=True)
+
+        hidden = config.get('mlp_hidden_vision', 4*d_vision)
+        mlp['w1'] = init_w(d_vision, hidden)
+        mlp['b1'] = torch.zeros((hidden,), requires_grad=True)
+        mlp['w2'] = init_w(hidden, d_vision)
+        mlp['b2'] = torch.zeros((d_vision,), requires_grad=True)
+
+        block = {}
+        block['attn'] = attn
+        block['mlp'] = mlp
+        block['ln1_gamma'] = torch.ones((d_vision,), requires_grad=True)
+        block['ln1_beta'] = torch.zeros((d_vision,), requires_grad=True)
+        block['ln2_gamma'] = torch.ones((d_vision,), requires_grad=True)
+        block['ln2_beta'] = torch.zeros((d_vision,), requires_grad=True)
+
+        vision['blocks'].append(block)
+
+    vision['final_ln_gamma'] = torch.ones((d_vision,), requires_grad=True)
+    vision['final_ln_beta'] = torch.zeros((d_vision,), requires_grad=True)
+    params['vision'] = vision
+
+    projector = {}
+    d_text = config['d_text']
+
+    projector['w1'] = init_w(d_text*2, d_vision)
+    projector['b1'] = torch.zeros((d_text*2,), requires_grad=True)
+    projector['w1'] = init_w(d_text, d_text*2)
+    projector['b1'] = torch.zeros((d_text,), requires_grad=True)
+    params['projector'] = projector
+
+    params['embedding'] = init_w(d_text, config['vocab_size'])
+    params['pos_embedding'] = init_w(d_text, config['max_text_len'])
+
+    decoder_blocks = []
+    for _ in range(config['num_decoder_layers']):
+        attn = {}
+        mlp = {}
+
+        attn['wq'] = init_w(d_text, d_text)
+        attn['bq'] = torch.zeros((d_text,), requires_grad=True)
+        attn['wk'] = init_w(d_text, d_text)
+        attn['bk'] = torch.zeros((d_text,), requires_grad=True)
+        attn['wv'] = init_w(d_text, d_text)
+        attn['bv'] = torch.zeros((d_text,), requires_grad=True)
+        attn['wo'] = init_w(d_text, d_text)
+        attn['bo'] = torch.zeros((d_text,), requires_grad=True)
+
+        hidden = config.get('mlp_hidden_text', 4*d_text)
+        mlp['w1'] = init_w(d_text, hidden)
+        mlp['b1'] = torch.zeros((hidden,), requires_grad=True)
+        mlp['w2'] = init_w(hidden, d_text)
+        mlp['b2'] = torch.zeros((d_text,), requires_grad=True)
+
+        block = {}
+        block['attn'] = attn
+        block['num_heads'] = config.get('num_decoder_heads', 2)
+        block['mlp'] = mlp
+        block['ln1'] = {}
+        block['ln1']['gamma'] = torch.ones((d_text,), requires_grad=True)
+        block['ln1']['beta'] = torch.zeros((d_text,), requires_grad=True)
+        block['ln2'] = {}
+        block['ln2']['gamma'] = torch.ones((d_text,), requires_grad=True)
+        block['ln2']['beta'] = torch.zeros((d_text,), requires_grad=True)
+
+        decoder_blocks.append(block)
+
+    params['decoder_blocks'] = decoder_blocks
+    params['final_ln'] = {}
+    params['final_ln']['gamma'] = torch.ones((d_text,), requires_grad=True)
+    params['final_ln']['beta'] = torch.zeros((d_text,), requires_grad=True)
+
+    lm_head = {}
+    lm_head['w_out'] = init_w(config['vocab_size'], d_text)
+    lm_head['b_out'] = torch.zeros((config['vocab_size'],), requires_grad=True)
+    params['lm_head'] = lm_head
+
+    params['image_token_id'] = config.get('image_token_id', 1)
+    params['num_image_tokens'] = config['num_image_tokens']
+
+    return params
+
