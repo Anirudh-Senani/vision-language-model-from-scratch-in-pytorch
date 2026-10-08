@@ -104,3 +104,11 @@ def attention_softmax(masked_scores):
     shifted = torch.exp(masked_scores - masked_scores.max(dim=-1, keepdim=True).values)
     return shifted/(shifted.sum(axis=-1, keepdim=True))
 
+# Step 11 - attention_context
+import torch
+
+def attention_context(attn_weights, v):
+    """Combine attention weights with values to produce context vectors."""
+    # TODO: return a tensor of shape (..., Sq, d_head) from attn_weights and v
+    return attn_weights @ v
+
