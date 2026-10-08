@@ -460,3 +460,28 @@ def language_model_head(x, w_out, b_out):
     # TODO: project hidden states (L, D) to vocabulary logits (L, V) using w_out and b_out
     return x @ w_out + b_out
 
+# Step 47 - encode_image_to_tokens
+def encode_image_to_tokens(image, vision_params, projector_params):
+    # TODO: add a batch dim if needed, then compose the full pipeline:
+    # split -> flatten -> project -> prepend class token -> add positions
+    # -> vision encoder -> drop class token -> projector, and squeeze the batch dim.
+    flag = False
+    if len(image.shape) == 3:
+        image = image.unsqueeze(0)
+        flag = True
+
+    patches = split_image_into_patches(image, vision_params['patch_size'])
+    flat_patches = flatten_patches(patches)
+
+    patch_embeds = project_patches_to_embeddings(flat_patches, vision_params['patch_proj_weight'], vision_params['patch_proj_bias'])
+    tokens = prepend_class_token(patch_embeds, vision_params['class_token'])
+
+    patch_sequence = add_position_embeddings(tokens, vision_params['position_embeddings'])
+    encoded = vision_encoder(patch_sequence, vision_params, vision_params['num_heads'])
+
+    patch_features = extract_patch_features(encoded)
+    out = vision_language_projector(patch_features, projector_params)
+    if flag:
+        out = out.squeeze(0)
+    return out
+
