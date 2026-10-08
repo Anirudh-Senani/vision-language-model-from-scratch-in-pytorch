@@ -299,3 +299,12 @@ def projector_second_layer(hidden, w2, b2):
     # TODO: apply the second linear layer of the projector (no activation).
     return hidden @ w2 + b2
 
+# Step 33 - vision_language_projector
+import torch
+
+def vision_language_projector(patch_features, params):
+    """Map (N, D_vision) patch features to (N, D_lang) image tokens."""
+    # TODO: chain the two projector layers using params 'w1','b1','w2','b2'.
+    a1 = projector_first_layer(patch_features, params['w1'], params['b1'])
+    return projector_second_layer(a1, params['w2'], params['b2'])
+

@@ -42,6 +42,7 @@ python scaffold.py
 - [x] **30.** extract_patch_features
 - [x] **31.** projector_first_layer
 - [x] **32.** projector_second_layer
+- [x] **33.** vision_language_projector
 
 ---
 
