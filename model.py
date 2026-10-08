@@ -621,10 +621,11 @@ def initialize_vlm_parameters(config, seed=0):
     vision['class_token'].requires_grad_(True)
     vision['position_embeddings'] = init_w(d_vision, num_patches+1)
 
-    vision['num_heads'] = config.get('num_vision_heads', 2)
+    vision['num_heads'] = config.get('num_vision_heads', None) or config.get('n_heads', None) or 2
 
     vision['blocks'] = []
-    for _ in range(config['num_vision_layers']):
+    vision_layers = config.get('num_vision_layers', None) or config.get('n_vision_layers', None) or config.get('n_layers_vision', None) or 0
+    for _ in range(vision_layers):
         attn = {}
         mlp = {}
 
@@ -658,7 +659,7 @@ def initialize_vlm_parameters(config, seed=0):
     params['vision'] = vision
 
     projector = {}
-    d_text = config['d_text']
+    d_text = config.get('d_text', None) or config.get('d_lang', 16)
 
     projector['w1'] = init_w(d_text*2, d_vision)
     projector['b1'] = torch.zeros((d_text*2,), requires_grad=True)
@@ -667,10 +668,12 @@ def initialize_vlm_parameters(config, seed=0):
     params['projector'] = projector
 
     params['embedding'] = init_w(d_text, config['vocab_size'])
-    params['pos_embedding'] = init_w(d_text, config['max_text_len'])
+    max_seq_len = config.get('max_text_len', None) or config.get('max_seq_len', None) or 32
+    params['pos_embedding'] = init_w(d_text, max_seq_len)
 
     decoder_blocks = []
-    for _ in range(config['num_decoder_layers']):
+    decoder_layers = config.get('num_decoder_layers', None) or config.get('n_decoder_layers', None) or config.get('n_layers_decoder', None) or 0
+    for _ in range(decoder_layers):
         attn = {}
         mlp = {}
 
@@ -691,7 +694,7 @@ def initialize_vlm_parameters(config, seed=0):
 
         block = {}
         block['attn'] = attn
-        block['num_heads'] = config.get('num_decoder_heads', 2)
+        block['num_heads'] = config.get('num_decoder_heads', None) or config.get('n_heads', None) or 2
         block['mlp'] = mlp
         block['ln1'] = {}
         block['ln1']['gamma'] = torch.ones((d_text,), requires_grad=True)
@@ -716,4 +719,19 @@ def initialize_vlm_parameters(config, seed=0):
     params['num_image_tokens'] = config['num_image_tokens']
 
     return params
+
+# Step 58 - collect_parameters
+def collect_parameters(params):
+    # TODO: recursively collect every leaf torch.Tensor with requires_grad=True into a flat list
+    parameters = []
+    if isinstance(params, dict):
+        for key in params:
+            parameters += collect_parameters(params[key])
+    elif isinstance(params, (list, tuple)):
+        for param in params:
+            parameters += collect_parameters(param)
+    elif isinstance(params, torch.tensor):
+        if params.requires_grad:
+            parameters += [params]
+    return parameters
 

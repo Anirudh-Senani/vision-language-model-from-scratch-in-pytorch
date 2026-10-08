@@ -67,6 +67,7 @@ python scaffold.py
 - [x] **55.** sample_from_logits
 - [x] **56.** generate_caption
 - [x] **57.** initialize_vlm_parameters
+- [x] **58.** collect_parameters
 
 ---
 
