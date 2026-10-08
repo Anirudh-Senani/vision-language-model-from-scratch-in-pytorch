@@ -498,3 +498,10 @@ def vision_language_forward(image, token_ids, params):
     logits = language_model_head(norm, params['lm_head']['w_out'], params['lm_head']['b_out'])
     return logits
 
+# Step 49 - shift_logits_and_labels
+import torch
+
+def shift_logits_and_labels(logits, labels):
+    # TODO: align each logit with the next-position label and return (shifted_logits, shifted_labels).
+    return logits[:-1], labels[1:]
+
