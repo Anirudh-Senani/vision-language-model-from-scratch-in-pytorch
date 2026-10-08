@@ -199,3 +199,11 @@ def gelu_activation(x):
     # return x * 0.5 * (1 + torch.tanh((2/torch.pi)**0.5 * (x + 0.044715*(x**3))))
     return x * 0.5 * (1 + torch.erf(x/(2**0.5)))
 
+# Step 21 - mlp_first_layer
+import torch
+
+def mlp_first_layer(x, w1, b1):
+    """Apply the first linear layer of the MLP block followed by GELU."""
+    # TODO: project x to the feed-forward dimension and apply GELU
+    return gelu_activation(linear_projection(x, w1, b1))
+
