@@ -438,3 +438,13 @@ def decoder_block(x, params, causal_mask):
     attn_out = pre_norm_sublayer(x, params['ln1']['gamma'], params['ln1']['beta'], mhsa_fn)
     return pre_norm_sublayer(attn_out, params['ln2']['gamma'], params['ln2']['beta'], mlp_fn)
 
+# Step 44 - language_model_decoder
+import torch
+
+def language_model_decoder(x, blocks_params, causal_mask):
+    # TODO: apply every decoder block in blocks_params sequentially to x and return the result
+    for block_params in blocks_params:
+        x = decoder_block(x, block_params, causal_mask)
+
+    return x
+
