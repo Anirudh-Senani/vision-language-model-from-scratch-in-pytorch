@@ -51,6 +51,7 @@ python scaffold.py
 - [x] **39.** insert_image_tokens
 - [x] **40.** build_multimodal_embeddings
 - [x] **41.** build_label_tensor
+- [x] **42.** build_causal_mask
 
 ---
 
