@@ -190,3 +190,12 @@ def multi_head_self_attention(x, params, num_heads, mask=None):
     context_heads = multi_head_attention_scores(q_h, k_h, v_h, mask)
     return merge_and_output_project(context_heads, params['wo'], params['bo'])
 
+# Step 20 - gelu_activation
+import torch
+
+def gelu_activation(x):
+    """Apply the exact (erf-based) GELU activation elementwise to x."""
+    # TODO: implement GELU(x) = x * 0.5 * (1 + erf(x / sqrt(2)))
+    # return x * 0.5 * (1 + torch.tanh((2/torch.pi)**0.5 * (x + 0.044715*(x**3))))
+    return x * 0.5 * (1 + torch.erf(x/(2**0.5)))
+

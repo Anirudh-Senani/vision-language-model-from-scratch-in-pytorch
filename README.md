@@ -29,6 +29,7 @@ python scaffold.py
 - [x] **17.** multi_head_attention_scores
 - [x] **18.** merge_and_output_project
 - [x] **19.** multi_head_self_attention
+- [x] **20.** gelu_activation
 
 ---
 
