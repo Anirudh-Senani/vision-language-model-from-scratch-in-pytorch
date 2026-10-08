@@ -37,6 +37,7 @@ python scaffold.py
 - [x] **25.** layer_norm
 - [x] **26.** residual_add
 - [x] **27.** pre_norm_sublayer
+- [x] **28.** vision_encoder_block
 
 ---
 
