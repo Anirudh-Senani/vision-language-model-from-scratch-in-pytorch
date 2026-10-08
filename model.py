@@ -21,3 +21,10 @@ def split_image_into_patches(image, patch_size):
 
     return image.reshape((B, C, grid_h, patch_size, grid_w, patch_size)).permute(0, 2, 4, 1, 3, 5).reshape((B, grid_h*grid_w, C, patch_size, patch_size))
 
+# Step 2 - flatten_patches
+def flatten_patches(patches):
+    # TODO: flatten each patch's channel and spatial dims into one vector, keep (B, N) leading dims.
+    B, N, C, ph, pw = patches.shape
+
+    return patches.reshape((B, N, C * ph * pw))
+
