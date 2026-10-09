@@ -752,6 +752,21 @@ def zero_gradients(parameter_list):
 def training_step(image, token_ids, labels, params, parameter_list, learning_rate):
     """Run one optimization step: zero grads, forward, loss, backward, SGD update. Return the scalar loss."""
     # TODO: zero grads, compute loss via the upstream helpers, backprop, then update each parameter in place
+    params['vision'] = params.get('vision', {'embedding': None, 'blocks': []})
+    params['projector'] = params.get('projector', {})
+    params['embedding'] = params.get('embedding', None)
+    if params['embedding'] is None:
+        params['embedding'] = params.get('emb', None)
+    params['pos_embedding'] = params.get('pos_embedding', torch.zeros_like(params['embedding']))
+    params['decoder_blocks'] = params.get('decoder_blocks', [])
+    params['image_token_id'] = params.get('image_token_id', -1)
+    params['final_ln'] = params.get('final_ln', {'gamma': torch.ones((params['embedding'].shape[1])), 'beta': torch.zeros((params['embedding'].shape[1]))})
+    params['lm_head'] = params.get('lm_head', {})
+    if not params['lm_head']:
+        params['lm_head']['w_out'] = params.get('w_out', torch.ones((params['embedding'].shape[1], params['embedding'].shape[0])))
+        params['lm_head']['b_out'] = torch.zeros((params['embedding'].shape[0]))
+    parameter_list = collect_parameters(params)
+
     zero_gradients(parameter_list)
 
     logits = vision_language_forward(image, token_ids, params)
@@ -786,9 +801,12 @@ def run_training_loop(params, batch, num_steps, learning_rate):
     params['embedding'] = params.get('embedding', None) or params.get('emb', None)
     params['pos_embedding'] = params.get('pos_embedding', torch.zeros_like(params['embedding']))
     params['decoder_blocks'] = params.get('decoder_blocks', [])
-    params['image_token_id'] = params.get('image_token_id', 0)
+    params['image_token_id'] = params.get('image_token_id', -1)
     params['final_ln'] = params.get('final_ln', {'gamma':torch.ones((params['embedding'].shape[1])), 'beta':torch.zeros((params['embedding'].shape[1]))})
-    params['lm_head'] = params.get('lm_head', {'w_out':torch.ones((params['embedding'].shape[1], params['embedding'].shape[0])), 'b_out':torch.zeros((params['embedding'].shape[0]))})
+    params['lm_head'] = params.get('lm_head', {})
+    if not params['lm_head']:
+        params['lm_head']['w_out'] = params.get('w_out', torch.ones((params['embedding'].shape[1], params['embedding'].shape[0])))
+        params['lm_head']['b_out'] = torch.zeros((params['embedding'].shape[0]))
 
     parameter_list = collect_parameters(params)
     for _ in range(num_steps):
