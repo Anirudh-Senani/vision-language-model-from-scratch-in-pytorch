@@ -522,10 +522,7 @@ def per_position_cross_entropy(shifted_logits, shifted_labels, ignore_index=-100
 
     mask = shifted_labels == ignore_index
     labels = torch.where(mask, 0, shifted_labels)
-    # if logprobs.ndim > 1 and labels.ndim == 1:
-    #     labels = labels.unsqueeze(0)
     entropy = -logprobs[torch.arange(labels.shape[0]), labels]
-
     entropy[mask] = 0.0
     return entropy
 
@@ -791,7 +788,7 @@ def run_training_loop(params, batch, num_steps, learning_rate):
     params['decoder_blocks'] = params.get('decoder_blocks', [])
     params['image_token_id'] = params.get('image_token_id', 0)
     params['final_ln'] = params.get('final_ln', {'gamma':torch.ones((params['embedding'].shape[1])), 'beta':torch.zeros((params['embedding'].shape[1]))})
-    params['lm_head'] = params.get('lm_head', {'w_out':torch.ones((params['embedding'].shape[::-1])), 'b_out':torch.zeros((params['embedding'].shape[0]))})
+    params['lm_head'] = params.get('lm_head', {'w_out':torch.ones((params['embedding'].shape[1], params['embedding'].shape[0])), 'b_out':torch.zeros((params['embedding'].shape[0]))})
 
     parameter_list = collect_parameters(params)
     for _ in range(num_steps):
