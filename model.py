@@ -774,3 +774,18 @@ def apply_gradient_update(parameters, learning_rate):
 
     return parameters
 
+# Step 62 - run_training_loop
+def run_training_loop(params, batch, num_steps, learning_rate):
+    # TODO: run num_steps of training_step over the batch and return a list of losses
+    history = []
+    params['vision'] = params.get('vision', {'blocks':[]})
+    params['projector'] = {}
+    params['decoder_blocks'] = params.get('decoder_blocks', [])
+
+    parameter_list = collect_parameters(params)
+    for _ in range(num_steps):
+        loss = training_step(batch['image'], batch['token_ids'], batch['labels'], params, parameter_list, learning_rate)
+        history.append(loss.item())
+
+    return history
+
