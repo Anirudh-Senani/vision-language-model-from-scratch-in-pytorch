@@ -522,10 +522,10 @@ def per_position_cross_entropy(shifted_logits, shifted_labels, ignore_index=-100
 
     mask = shifted_labels == ignore_index
     labels = torch.where(mask, 0, shifted_labels)
-    if logprobs.ndim > 1:
-        entropy = -logprobs[torch.arange(labels.shape[0]), labels]
-    else:
-        entropy = -logprobs[labels]
+    # if logprobs.ndim > 1 and labels.ndim == 1:
+    #     labels = labels.unsqueeze(0)
+    entropy = -logprobs[torch.arange(labels.shape[0]), labels]
+
     entropy[mask] = 0.0
     return entropy
 
