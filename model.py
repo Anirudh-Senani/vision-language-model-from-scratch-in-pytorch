@@ -488,7 +488,10 @@ def encode_image_to_tokens(image, vision_params, projector_params):
 # Step 48 - vision_language_forward
 def vision_language_forward(image, token_ids, params):
     # TODO: route image + token_ids through the full vision-language model and return (L, V) logits.
-    image_tokens = encode_image_to_tokens(image, params['vision'], params['projector'])
+    if image is None:
+        image_tokens = torch.tensor([])
+    else:
+        image_tokens = encode_image_to_tokens(image, params['vision'], params['projector'])
     mm_embed = build_multimodal_embeddings(token_ids, image_tokens, params['embedding'], params['pos_embedding'], params['image_token_id'])
 
     causal_mask = build_causal_mask(mm_embed.shape[0])
